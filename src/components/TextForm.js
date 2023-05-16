@@ -1,161 +1,96 @@
-import React, { useState } from "react";
+import React, { useState} from 'react'
 
-import PropTypes from "prop-types";
-export default function TextForm(props) {
-  //   Intial Text and State
-  const [text, setText] = useState("");
+function TextForm(props) {
+    const handleUpClick = () => {
+        let newText = text.toUpperCase();
+        setText(newText);
+        props.showAlert("Converted To Upper Case", "Sucess");
 
-  //   Text Updation----------------------------------------------------------------
-  const handleOnChange = (event) => {
-    console.log("On Change");
-    setText(event.target.value);
-  };
-
-  //   UpperCase Btn----------------------------------------------------------------
-
-  const handleUpClick = () => {
-    console.log("Upper Case Button Changed:" + " " + text);
-    let newText = text.toUpperCase();
-    setText(newText);
-    if(text.length > 0){
-      props.theAlert("Converted into Uppercase!","success");
     }
-  };
-  
-  //   LowerCase btn----------------------------------------------------------------
-  
-  const handleLoClick = () => {
-    console.log("Lower Case Button Changed:" + " " + text);
-    let newText = text.toLowerCase();
-    setText(newText);
-    if(text.length > 0){
-      props.theAlert("Converted into Lowercase!","success");
+    const handleLoClick = () => {
+        let newText = text.toLowerCase();
+        setText(newText);
+        props.showAlert("Converted To Lower Case ", "Success");
+
     }
-  };
-  
-  //   Speak Button----------------------------------------------------------------
-  
-  const handleSpeakClick = () => {
-    const myText = new SpeechSynthesisUtterance();
-    myText.text = text;
-    window.speechSynthesis.speak(myText);
-  };
-  
-  //   Copy Button---------------------------------------------------------------
-  
-  const handleCopyClick = () => {
-    var theText = document.getElementById("myBox");
-    theText.select();
-    navigator.clipboard.writeText(theText.value);
-    if(text.length > 0){
-      props.theAlert("Copied to Clipboard!","success");
+    const [text, setText] = useState('');
+    const [index ,setIndex]=useState('0')
+
+    const handleOnChange = (event) => {
+        
+        setText(event.target.value)
+        setIndex('1')
     }
-  };
-  
-  //   Remove Extra Spaces----------------------------------------------------------------
-  
-  const handleExtraSpaces = () => {
-    const handledText = text.split(/[ ]+/);
-    setText(handledText.join(" "));
-    props.theAlert("Extra spaces removed!","success");
-  };
-  
-  
-  //   Clear Button----------------------------------------------------------------
-  
-  const handleClearClick = () => {
-    console.log("Cleared: " + text);
-    let newText = "";
-    setText(newText);
-    if(text.length > 0){
-      props.theAlert("Cleared All!","success");
+    
+    const handleToclick = () => {
+        const newText = text.toUpperCase().split(" ").map(function (word) {
+            return word.charAt(0).toLowerCase() + word.slice(1);
+        })
+            .join(" ");
+        
+        setText(newText)
+        props.showAlert("Converted To tOGGLE Case Case ", "Sucess");
+
+    };
+    const handleTiclick = () => {
+        var sentence = text.toLowerCase().split(" ");
+        for (var i = 0; i < sentence.length; i++) {
+            sentence[i] = sentence[i][0].toUpperCase() + sentence[i].slice(1);
+        }
+        setText(sentence.join(" "));
+        props.showAlert("Converted To Sentence Case ", "Sucess");
+
     }
-  };
+    const handleCopy = () => {
+        var text = document.getElementById("myBox");
+        text.select();
+        navigator.clipboard.writeText(text.value);
+        props.showAlert("Text coppied ", "Sucess");
 
-  //   Dark Mode/ Light Mode Switch----------------------------------------------------------------------
 
-//   const [modeBtnText, setmodeBtnText] = useState("Enable Dark Mode");
-
-//   const [modeStyle, setModeStyle] = useState({
-//     color: "black",
-//     backgroundColor: "white",
-//   });
-//   const toggleStyle = () => {
-//     if (modeStyle.color === "black") {
-//       setModeStyle({
-//         color: "white",
-//         backgroundColor: "black",
-//         border: "2px solid white",
-//       });
-//       setmodeBtnText("Enable Light Mode");
-//     } else {
-//       setModeStyle({
-//         color: "black",
-//         backgroundColor: "white",
-//       });
-//       setmodeBtnText("Enable Dark Mode");
-//     }
-//   };
-
-  //   Number of words---------------------------------------------------------
-
-  const numberOfWords = () => {
-    if (text.length == 0) {
-      return 0;
-    } else {
-      return text.split(" ").length;
     }
-  };
-  return (
-    <div >
-      <div className="container " style={{color: props.mode ==='dark'? 'white':'black'}}>
-        <h1>{props.heading}</h1>
-        <div className="mb-3">
-          <textarea
-            className="form-control"
-            id="myBox"
-            style = {{backgroundColor: props.mode ==='dark'? 'black':'white', color: props.mode ==='dark'? 'white':'black'}}
-            value={text}
-            onChange={handleOnChange}
-            rows="8"
-          ></textarea>
-        </div>
-        <button className="btn btn-success mx-1" onClick={handleUpClick}>
-          Convert to uppercase
-        </button>
-        <button className="btn btn-success mx-1" onClick={handleLoClick}>
-          Convert to lowercase
-        </button>
-        <button className="btn btn-success mx-1" onClick={handleSpeakClick}>
-          Speak
-        </button>
-        <button className="btn btn-success mx-1" onClick={handleCopyClick}>
-          Copy Text
-        </button>
-        <button className="btn btn-success mx-1" onClick={handleExtraSpaces}>
-          Remove Extra Spaces
-        </button>
-        <button className="btn btn-danger mx-1" onClick={handleClearClick}>
-          Clear all
-        </button>
-        {/* <button className="btn btn-success mx-1" onClick={toggleStyle}>
-          {modeBtnText}
-        </button> */}
-      </div>
-      <div className="container my-3" style={{color: props.mode ==='dark'? 'white':'black'}}>
-        <h1>Text Summary</h1>
-        <p>
-          {text.length} letters and {numberOfWords()} words
-        </p>
-        <p>{0.008 * text.split(" ").length} Minutes to read</p>
-        <h2>Preview</h2>
-        <p>{text.length>0? text: "Please Enter Something In The Textbox Above To Preview Here"}</p>
-      </div>
-    </div>
-  );
+    const handleExtraSpace = () => {
+        var newText = text.split(/[ ]+/);
+        setText(newText.join(" "))
+      props.showAlert("Extra spaces removed ", "Sucess");
+
+
+    }
+    const handleclear = () => {
+        setText("");
+        props.showAlert("Text Cleared", "Sucess")
+        setIndex('0')
+
+    }
+    return (
+        <>
+            <div className="container" style={{color:props.mode==='dark'?'white':'#042743'}}>
+            <h1>{props.heading}</h1>
+            <div className="mb-3">
+            <textarea className="form-control" value={text} onChange={handleOnChange} style={{backgroundColor:props.mode==='dark'?'grey':'white',color:props.mode==='dark'?'white':'#042743'}} id="myBox" rows="8"></textarea>
+                
+            </div>
+            <div className='flex-wrap flex'>
+            <button className="btn btn-primary ms-2 my-2" onClick={handleUpClick}>Convert to UpperCase</button>
+            <button className="btn btn-primary xs-ms-3 ms-2 my-2" onClick={handleLoClick}>Convert to LowerCase</button>
+            <button className="btn btn-primary sm-ms-3 ms-2 my-2" onClick={handleclear}>Reset</button>
+            <button className="btn btn-primary md-ms-3 ms-2 my-2" onClick={handleToclick}>tOGGLE CASE</button>
+            <button className="btn btn-primary lg-ms-3 ms-2 my-2" onClick={handleCopy}>Copy text</button>
+            <button className="btn btn-primary xl-ms-3 ms-2 my-2" onClick={handleExtraSpace}>Remove Extra Space</button>
+            </div>
+            
+
+            <div className='container my-3'>
+                    <h2>Your text summary</h2>
+    {index==0 && <p> 0 Word & 0 character </p>}
+               { index==1 && <p>{text.split(" ").length} words and {text.length} character</p>} 
+                <p>{0.008 * text.split(" ").length} Minutes</p>
+                <h2>Preview</h2>
+                <p>{text.length>0?text:"Enter your something to preview it here" }</p>
+            </div>
+            </div>
+        </>
+    )
 }
 
-TextForm.propTypes = { heading: PropTypes.string.isRequired };
-TextForm.props = {
-  heading: "set heading here",
-};
+export default TextForm
