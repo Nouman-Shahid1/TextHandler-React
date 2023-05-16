@@ -1,45 +1,62 @@
-import Navbar from './components/Navbar';
-import TextForm from './components/TextForm';
 import React, { useState } from "react";
-import Alert from './components/Alert';
+import Alert from "./Components/Alert";
+import Navebar from "./Components/Navebar";
+import TextForm from "./Components/TextForm";
+import { Route, Routes } from "react-router-dom";
+import Footer from "./Components/Footer";
 
-import './App.css';
 function App() {
-  const [mode, setMode] = useState('light');  //Whether Dark Mode is enabled or not
-  const [alert, setAlert] = useState(null);
+  const [mode, setMode] = useState("light");
+  const [alert, setAlert] = useState(false);
 
-  const theAlert = (messege, type) => {
+  const showAlert = (message, type) => {
     setAlert({
-      msg: messege,
-      type: type
+      msg: message,
+      type: type,
     });
-    setTimeout(()=>{
-      setAlert(null);
-    },2000);
-  }
+    setTimeout(() => {
+      setAlert(false);
+    }, 1500);
+  };
 
-  const toggleMode = () => {
-    if(mode === 'dark'){
-      setMode('light');
-      document.body.style.backgroundColor = '#adb5bd';
-      theAlert("Light mode is enabled", "success")
-      document.title = 'TextHandler - Light Mode Enabled';
+  const togglemode = () => {
+    if (mode === "light") {
+      setMode("dark");
+      document.body.style.background = "#042743";
+      showAlert("Dark mode has been enabled", "success");
+      document.title = "TextHandler -Dark Mode";
+      // setInterval(() => {
+      // document.title = "TextHandler is Amazing";
+      // }, 2000);
+      // setInterval(() => {
+      //   document.title = "Install TextHandler Now";
+      //   }, 1500);
+    } else {
+      setMode("light");
+      document.body.style.background = "white";
+      showAlert("Light mode has been enabled", "success");
+      document.title = "TextHandler -Light Mode";
     }
-    else{
-      setMode('dark');
-      document.body.style.backgroundColor = '#343a40';
-      theAlert("Dark mode is enabled", "success")
-      document.title = 'TextHandler - Dark Mode Enabled';
-    }
-
-  }
+  };
   return (
     <>
-   <Navbar title = "TextHandler" mode = {mode} toggleMode = {toggleMode}/>
-   <Alert alert={alert}/>
-   <div className="container my-3">
-   <TextForm heading = "Enter Your Text To Ananlyze below" mode = {mode} theAlert={theAlert}/>
-   </div>
+      <Navebar
+        title="TextHandler"
+        about="About"
+        contact="Contact"
+        mode={mode}
+        togglemode={togglemode}
+      />
+      <Alert alert={alert} />
+      <div className="container my-3">
+        {/* <TextForm mode={mode}/> */}
+        <TextForm
+          heading="Enter the text to analyze below"
+          mode={mode}
+          showAlert={showAlert}
+          />
+        <Footer  mode={mode}/>
+      </div>
     </>
   );
 }
